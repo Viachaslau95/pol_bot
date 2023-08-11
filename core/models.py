@@ -5,7 +5,7 @@ class Client(models.Model):
     reg_email = models.CharField(max_length=120)
     reg_password = models.CharField(max_length=120)
 
-    national_id = models.CharField(max_length=250)
+    national_id = models.CharField(max_length=250, unique=True)
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
     gender = models.CharField(max_length=20, blank=True, null=True)
