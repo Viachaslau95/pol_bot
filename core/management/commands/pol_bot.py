@@ -8,7 +8,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 from config.settings import LOGIN_URL, NATIONAL, OTHER
 from core.models import Client
 
@@ -44,9 +43,13 @@ class Command(BaseCommand):
 
             # login
             driver.get(LOGIN_URL)
-            time.sleep(10)
+            WebDriverWait(driver, 300).until(
+                EC.presence_of_element_located((By.ID, "mat-input-0"))
+            )
             driver.find_element(By.ID, "mat-input-0").send_keys(email)
+            time.sleep(2)
             driver.find_element(By.ID, "mat-input-1").send_keys(password)
+            time.sleep(2)
             # wait 10 min
             WebDriverWait(driver, 600).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "h1.fs-24.fs-sm-46.mb-25"))
@@ -56,13 +59,13 @@ class Command(BaseCommand):
                 for city in range(8):
                     element = driver.find_element(By.ID, "mat-select-0")
                     driver.execute_script("arguments[0].click();", element)
-                    time.sleep(1)
+                    time.sleep(3)
                     try:
                         driver.find_element(By.ID, f"mat-option-{city}").click()
-                        time.sleep(3)
+                        time.sleep(5)
 
                         driver.find_element(By.ID, "mat-select-2").click()
-                        time.sleep(3)
+                        time.sleep(5)
 
                         national_visa_element = driver.find_element(By.XPATH, f"//span[text()=' {NATIONAL} ']")
                         national_visa_element.click()
@@ -74,9 +77,35 @@ class Command(BaseCommand):
                         driver.find_element(By.XPATH, f"//span[text()=' {OTHER} ']").click()
                         time.sleep(3)
 
+                        date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
+                                                                  'input[formcontrolname="dateOfBirth"].form-control')
+                        date_of_birth_input.clear()
+                        date_of_birth_input.send_keys("23/10/1992")
+                        time.sleep(3)
+
+                        driver.find_element(By.ID, "mat-select-value-7").click()
+                        time.sleep(3)
+
+                        driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
+                        time.sleep(3)
+
+                        # try:
+                        #     continue_button = driver.find_element(
+                        #         By.XPATH,
+                        #         "//button[contains(@class, 'mat-raised-button') and contains(@class, 'mat-button-disabled')]"
+                        #     )
+                        #     time.sleep(3)
+                        #     if continue_button.is_displayed() and continue_button.get_attribute("disabled") == "False":
+                        #         continue_button.click()
+                        #         print("Button has been unlocked and pressed")
+                        #     else:
+                        #         print("The button is either not visible or enabled")
+                        #     time.sleep(5)
+                        # except Exception:
+                        #     print("The button is disabled")
+
                     except Exception as e:
                         print(e)
 
         except Exception as e:
             print(f"User {user_id} error: {e}")
-
