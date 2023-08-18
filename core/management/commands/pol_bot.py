@@ -86,12 +86,13 @@ class Command(BaseCommand):
                             time.sleep(5)
                             self.first_city_group(driver, client)
 
-                        # if city.title == "Center-Gomel":
-                        #     element = driver.find_element(By.ID, "mat-select-0")
-                        #     driver.execute_script("arguments[0].click();", element)
-                        #     time.sleep(3)
-                        #     driver.find_element(By.ID, "mat-option-2").click()
-                        #     time.sleep(5)
+                        if city.title == "Center-Gomel":
+                            element = driver.find_element(By.ID, "mat-select-0")
+                            driver.execute_script("arguments[0].click();", element)
+                            time.sleep(3)
+                            driver.find_element(By.ID, "mat-option-2").click()
+                            time.sleep(5)
+                            self.second_city_group(driver, client)
                         #
                         # if city.title == "Center-Grodno":
                         #     element = driver.find_element(By.ID, "mat-select-0")
@@ -246,7 +247,8 @@ class Command(BaseCommand):
                 except Exception:
                     print('Error continue')
             else:
-                driver.find_element(By.ID, "mat-option-247").click()
+                driver.find_element(By.XPATH,
+                                    "//span[contains(@class, 'mat-option-text') and text()=' Schengen Visa C ']").click()
                 time.sleep(3)
                 date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
                                                           'input[formcontrolname="dateOfBirth"].form-control')
@@ -276,6 +278,113 @@ class Command(BaseCommand):
                 except Exception:
                     print('Error continue')
 
+        except Exception as e:
+            print(e)
+
+    def second_city_group(self, driver, client):
+        try:
+            driver.find_element(By.ID, "mat-select-2").click()
+            time.sleep(5)
+
+            if client.visa_type == "National Visa D":
+                driver.find_element(By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' National Visa D ']").click()
+                time.sleep(3)
+                driver.find_element(By.ID, "mat-select-4").click()
+                time.sleep(3)
+                if client.visa_sub_category == "D - National":
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - National ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - National Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - National Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - Student':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Student ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - Student Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Student Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - Uczen':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Uczen ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - Uczen Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Uczen Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'PBH D-visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' PBH D-visa ']"
+                    ).click()
+                    time.sleep(2)
+                date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
+                                                          'input[formcontrolname="dateOfBirth"].form-control')
+                date_of_birth_input.clear()
+                date_of_birth_input.send_keys(client.date_of_birth)
+                time.sleep(5)
+
+                WebDriverWait(driver, 300).until(
+                    EC.presence_of_element_located(
+                        (By.ID, "mat-select-6")
+                    )
+                ).click()
+                time.sleep(3)
+
+                driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
+                time.sleep(3)
+                try:
+                    continue_button = driver.find_element(By.XPATH,
+                                                          "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
+                    time.sleep(3)
+                    if "mat-button-disabled" in continue_button.get_attribute("class"):
+                        print("The button is disabled. Continuing the loop.")
+                        time.sleep(60)
+                    else:
+                        continue_button.click()
+                        print("Button has been clicked")
+                        self.your_detail(driver, client)
+                except Exception:
+                    print('Error continue')
+            else:
+                driver.find_element(By.XPATH,
+                                    "//span[contains(@class, 'mat-option-text') and text()=' Schengen Visa C ']").click()
+                time.sleep(3)
+                date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
+                                                          'input[formcontrolname="dateOfBirth"].form-control')
+                date_of_birth_input.clear()
+                date_of_birth_input.send_keys(client.date_of_birth)
+                time.sleep(3)
+                WebDriverWait(driver, 300).until(
+                    EC.presence_of_element_located(
+                        (By.ID, "mat-select-6")
+                    )
+                ).click()
+                time.sleep(3)
+
+                driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
+                time.sleep(3)
+
+                try:
+                    continue_button = driver.find_element(By.XPATH,
+                                                          "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
+                    time.sleep(3)
+                    if "mat-button-disabled" in continue_button.get_attribute("class"):
+                        print("The button is disabled. Continuing the loop.")
+                    else:
+                        continue_button.click()
+                        print("Button has been clicked")
+                        self.your_detail(driver, client)
+                except Exception:
+                    print('Error continue')
         except Exception as e:
             print(e)
 
@@ -320,3 +429,6 @@ class Command(BaseCommand):
 
         driver.find_element(By.ID, "mat-input-9").send_keys(client.admin_email)
         time.sleep(3)
+
+        # driver.find_element(By.XPATH, "//button[contains(@class, 'mat-stroked-button') and text()=' Save ']").click()
+
