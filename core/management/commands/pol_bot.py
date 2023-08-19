@@ -246,65 +246,12 @@ class Command(BaseCommand):
                     ).click()
                     time.sleep(2)
 
-                date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
-                                                          'input[formcontrolname="dateOfBirth"].form-control')
-                date_of_birth_input.clear()
-                date_of_birth_input.send_keys(client.date_of_birth)
-                time.sleep(5)
-
-                WebDriverWait(driver, 300).until(
-                    EC.presence_of_element_located(
-                        (By.ID, "mat-select-6")
-                    )
-                ).click()
-                time.sleep(3)
-
-                driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
-                time.sleep(3)
-                try:
-                    continue_button = driver.find_element(By.XPATH,
-                                                          "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
-                    time.sleep(3)
-                    if "mat-button-disabled" in continue_button.get_attribute("class"):
-                        print("The button is disabled. Continuing the loop.")
-                        time.sleep(60)
-                    else:
-                        continue_button.click()
-                        print("Button has been clicked")
-                        self.your_detail(driver, client)
-                except Exception:
-                    print('Error continue')
+                self.date_of_birth_and_nationality(driver, client)
             else:
                 driver.find_element(By.XPATH,
                                     "//span[contains(@class, 'mat-option-text') and text()=' Schengen Visa C ']").click()
                 time.sleep(3)
-                date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
-                                                          'input[formcontrolname="dateOfBirth"].form-control')
-                date_of_birth_input.clear()
-                date_of_birth_input.send_keys(client.date_of_birth)
-                time.sleep(3)
-                WebDriverWait(driver, 300).until(
-                    EC.presence_of_element_located(
-                        (By.ID, "mat-select-6")
-                    )
-                ).click()
-                time.sleep(3)
-
-                driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
-                time.sleep(3)
-
-                try:
-                    continue_button = driver.find_element(By.XPATH,
-                                                          "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
-                    time.sleep(3)
-                    if "mat-button-disabled" in continue_button.get_attribute("class"):
-                        print("The button is disabled. Continuing the loop.")
-                    else:
-                        continue_button.click()
-                        print("Button has been clicked")
-                        self.your_detail(driver, client)
-                except Exception:
-                    print('Error continue')
+                self.date_of_birth_and_nationality(driver, client)
 
         except Exception as e:
             print(e)
@@ -365,68 +312,44 @@ class Command(BaseCommand):
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH Visa ']"
                     ).click()
                     time.sleep(2)
-
-                date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
-                                                          'input[formcontrolname="dateOfBirth"].form-control')
-                date_of_birth_input.clear()
-                date_of_birth_input.send_keys(client.date_of_birth)
-                time.sleep(5)
-
-                WebDriverWait(driver, 300).until(
-                    EC.presence_of_element_located(
-                        (By.ID, "mat-select-6")
-                    )
-                ).click()
-                time.sleep(3)
-
-                driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
-                time.sleep(3)
-                try:
-                    continue_button = driver.find_element(By.XPATH,
-                                                          "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
-                    time.sleep(3)
-                    if "mat-button-disabled" in continue_button.get_attribute("class"):
-                        print("The button is disabled. Continuing the loop.")
-                        time.sleep(60)
-                    else:
-                        continue_button.click()
-                        print("Button has been clicked")
-                        self.your_detail(driver, client)
-                except Exception:
-                    print('Error continue')
+                self.date_of_birth_and_nationality(driver, client)
             else:
                 driver.find_element(By.XPATH,
                                     "//span[contains(@class, 'mat-option-text') and text()=' Schengen Visa C ']").click()
                 time.sleep(3)
-                date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
-                                                          'input[formcontrolname="dateOfBirth"].form-control')
-                date_of_birth_input.clear()
-                date_of_birth_input.send_keys(client.date_of_birth)
-                time.sleep(3)
-                WebDriverWait(driver, 300).until(
-                    EC.presence_of_element_located(
-                        (By.ID, "mat-select-6")
-                    )
-                ).click()
-                time.sleep(3)
-
-                driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
-                time.sleep(3)
-
-                try:
-                    continue_button = driver.find_element(By.XPATH,
-                                                          "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
-                    time.sleep(3)
-                    if "mat-button-disabled" in continue_button.get_attribute("class"):
-                        print("The button is disabled. Continuing the loop.")
-                    else:
-                        continue_button.click()
-                        print("Button has been clicked")
-                        self.your_detail(driver, client)
-                except Exception:
-                    print('Error continue')
+                self.date_of_birth_and_nationality(driver, client)
         except Exception as e:
             print(e)
+
+    def date_of_birth_and_nationality(self, driver, client):
+        date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
+                                                  'input[formcontrolname="dateOfBirth"].form-control')
+        date_of_birth_input.clear()
+        date_of_birth_input.send_keys(client.date_of_birth)
+        time.sleep(5)
+
+        WebDriverWait(driver, 300).until(
+            EC.presence_of_element_located(
+                (By.ID, "mat-select-6")
+            )
+        ).click()
+        time.sleep(3)
+
+        driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
+        time.sleep(3)
+        try:
+            continue_button = driver.find_element(By.XPATH,
+                                                  "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
+            time.sleep(3)
+            if "mat-button-disabled" in continue_button.get_attribute("class"):
+                print("The button is disabled. Continuing the loop.")
+                time.sleep(60)
+            else:
+                continue_button.click()
+                print("Button has been clicked")
+                self.your_detail(driver, client)
+        except Exception:
+            print('Error continue')
 
     def your_detail(self, driver, client):
         WebDriverWait(driver, 120).until(
