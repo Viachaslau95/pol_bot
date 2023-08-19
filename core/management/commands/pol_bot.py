@@ -18,6 +18,7 @@ chrome_options = Options()
 chrome_options.add_argument("--incognito")
 chrome_options.add_experimental_option("detach", True)
 
+
 # HOSTNAME = '37.17.38.196'
 # PORT = '53281'
 #
@@ -36,8 +37,6 @@ class Command(BaseCommand):
 
         for user_id, driver in enumerate(drivers):
             client = users_from_db[user_id % len(users_from_db)]
-            # email = client.reg_email
-            # password = client.reg_password
             thread = threading.Thread(target=self.login_and_city,
                                       args=(driver, user_id, client))
             threads.append(thread)
@@ -93,41 +92,49 @@ class Command(BaseCommand):
                             driver.find_element(By.ID, "mat-option-2").click()
                             time.sleep(5)
                             self.second_city_group(driver, client)
-                        #
-                        # if city.title == "Center-Grodno":
-                        #     element = driver.find_element(By.ID, "mat-select-0")
-                        #     driver.execute_script("arguments[0].click();", element)
-                        #     time.sleep(3)
-                        #     driver.find_element(By.ID, "mat-option-3").click()
-                        #     time.sleep(5)
-                        #
-                        # if city.title == "Center-Lida":
-                        #     element = driver.find_element(By.ID, "mat-select-0")
-                        #     driver.execute_script("arguments[0].click();", element)
-                        #     time.sleep(3)
-                        #     driver.find_element(By.ID, "mat-option-4").click()
-                        #     time.sleep(5)
-                        #
-                        # if city.title == "Center-Minsk":
-                        #     element = driver.find_element(By.ID, "mat-select-0")
-                        #     driver.execute_script("arguments[0].click();", element)
-                        #     time.sleep(3)
-                        #     driver.find_element(By.ID, "mat-option-1").click()
-                        #     time.sleep(5)
-                        #
-                        # if city.title == "Center-Mogilev":
-                        #     element = driver.find_element(By.ID, "mat-select-0")
-                        #     driver.execute_script("arguments[0].click();", element)
-                        #     time.sleep(3)
-                        #     driver.find_element(By.ID, "mat-option-1").click()
-                        #     time.sleep(5)
-                        #
-                        # if city.title == "Center-Pinsk":
-                        #     element = driver.find_element(By.ID, "mat-select-0")
-                        #     driver.execute_script("arguments[0].click();", element)
-                        #     time.sleep(3)
-                        #     driver.find_element(By.ID, "mat-option-1").click()
-                        #     time.sleep(5)
+
+                        if city.title == "Center-Grodno":
+                            element = driver.find_element(By.ID, "mat-select-0")
+                            driver.execute_script("arguments[0].click();", element)
+                            time.sleep(3)
+                            driver.find_element(By.ID, "mat-option-3").click()
+                            time.sleep(5)
+                            self.first_city_group(driver, client)
+
+                        if city.title == "Center-Lida":
+                            element = driver.find_element(By.ID, "mat-select-0")
+                            driver.execute_script("arguments[0].click();", element)
+                            time.sleep(3)
+                            driver.find_element(By.ID, "mat-option-4").click()
+                            time.sleep(5)
+                            self.first_city_group(driver, client)
+
+                        if city.title == "Center-Minsk":
+                            element = driver.find_element(By.ID, "mat-select-0")
+                            driver.execute_script("arguments[0].click();", element)
+                            time.sleep(3)
+                            driver.find_element(By.ID, "mat-option-5").click()
+                            time.sleep(5)
+                            if client.visa_sub_category == 'Postal D-visa':
+                                self.first_city_group(driver, client)
+                            else:
+                                self.second_city_group(driver, client)
+
+                        if city.title == "Center-Mogilev":
+                            element = driver.find_element(By.ID, "mat-select-0")
+                            driver.execute_script("arguments[0].click();", element)
+                            time.sleep(3)
+                            driver.find_element(By.ID, "mat-option-6").click()
+                            time.sleep(5)
+                            self.second_city_group(driver, client)
+
+                        if city.title == "Center-Pinsk":
+                            element = driver.find_element(By.ID, "mat-select-0")
+                            driver.execute_script("arguments[0].click();", element)
+                            time.sleep(3)
+                            driver.find_element(By.ID, "mat-option-7").click()
+                            time.sleep(5)
+                            self.first_city_group(driver, client)
 
                 else:
                     for city in range(8):
@@ -188,7 +195,8 @@ class Command(BaseCommand):
             time.sleep(5)
 
             if client.visa_type == "National Visa D":
-                driver.find_element(By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' National Visa D ']").click()
+                driver.find_element(By.XPATH,
+                                    "//span[contains(@class, 'mat-option-text') and text()=' National Visa D ']").click()
                 time.sleep(3)
                 driver.find_element(By.ID, "mat-select-4").click()
                 time.sleep(3)
@@ -287,7 +295,8 @@ class Command(BaseCommand):
             time.sleep(5)
 
             if client.visa_type == "National Visa D":
-                driver.find_element(By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' National Visa D ']").click()
+                driver.find_element(By.XPATH,
+                                    "//span[contains(@class, 'mat-option-text') and text()=' National Visa D ']").click()
                 time.sleep(3)
                 driver.find_element(By.ID, "mat-select-4").click()
                 time.sleep(3)
@@ -326,6 +335,17 @@ class Command(BaseCommand):
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' PBH D-visa ']"
                     ).click()
                     time.sleep(2)
+                elif client.visa_sub_category == 'D - PBH':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - PBH Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH Visa ']"
+                    ).click()
+                    time.sleep(2)
+
                 date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
                                                           'input[formcontrolname="dateOfBirth"].form-control')
                 date_of_birth_input.clear()
@@ -431,4 +451,3 @@ class Command(BaseCommand):
         time.sleep(3)
 
         # driver.find_element(By.XPATH, "//button[contains(@class, 'mat-stroked-button') and text()=' Save ']").click()
-
