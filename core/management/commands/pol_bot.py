@@ -11,7 +11,7 @@ from selenium.webdriver.common.proxy import ProxyType
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from config.settings import LOGIN_URL, NATIONAL, OTHER, WORK
+from config.settings import LOGIN_URL
 from core.models import Client, City
 
 chrome_options = Options()
@@ -60,24 +60,31 @@ class Command(BaseCommand):
             time.sleep(2)
             driver.find_element(By.ID, "mat-input-1").send_keys(client.reg_password)
             time.sleep(2)
-            # wait 10 min
-            WebDriverWait(driver, 600).until(
+            # wait 30 min
+            WebDriverWait(driver, 1800).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "h1.fs-24.fs-sm-46.mb-25"))
             )
             time.sleep(3)
             while True:
                 cities = City.objects.filter(clients=client)
                 if cities:
+                    element = driver.find_element(By.ID, "mat-select-0")
+                    driver.execute_script("arguments[0].click();", element)
+                    time.sleep(3)
                     for city in cities:
                         if city.title == "Center-Baranovichi":
+                            driver.find_element(By.ID, "mat-option-1").click()
+                            time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
                             driver.find_element(By.ID, "mat-option-0").click()
-                            time.sleep(5)
+                            time.sleep(3)
                             self.first_city_group(driver, client)
 
                         if city.title == "Center-Brest":
+                            driver.find_element(By.ID, "mat-option-0").click()
+                            time.sleep(3)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
@@ -86,6 +93,8 @@ class Command(BaseCommand):
                             self.first_city_group(driver, client)
 
                         if city.title == "Center-Gomel":
+                            driver.find_element(By.ID, "mat-option-0").click()
+                            time.sleep(3)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
@@ -94,6 +103,8 @@ class Command(BaseCommand):
                             self.second_city_group(driver, client)
 
                         if city.title == "Center-Grodno":
+                            driver.find_element(By.ID, "mat-option-0").click()
+                            time.sleep(3)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
@@ -102,89 +113,98 @@ class Command(BaseCommand):
                             self.first_city_group(driver, client)
 
                         if city.title == "Center-Lida":
+                            driver.find_element(By.ID, "mat-option-0").click()
+                            time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
                             driver.find_element(By.ID, "mat-option-4").click()
-                            time.sleep(5)
+                            time.sleep(3)
                             self.first_city_group(driver, client)
 
                         if city.title == "Center-Minsk":
+                            driver.find_element(By.ID, "mat-option-0").click()
+                            time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
                             driver.find_element(By.ID, "mat-option-5").click()
-                            time.sleep(5)
+                            time.sleep(3)
                             if client.visa_sub_category == 'Postal D-visa':
                                 self.first_city_group(driver, client)
                             else:
                                 self.second_city_group(driver, client)
 
                         if city.title == "Center-Mogilev":
+                            driver.find_element(By.ID, "mat-option-0").click()
+                            time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
                             driver.find_element(By.ID, "mat-option-6").click()
-                            time.sleep(5)
+                            time.sleep(3)
                             self.second_city_group(driver, client)
 
                         if city.title == "Center-Pinsk":
+                            driver.find_element(By.ID, "mat-option-0").click()
+                            time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
                             driver.execute_script("arguments[0].click();", element)
                             time.sleep(3)
                             driver.find_element(By.ID, "mat-option-7").click()
-                            time.sleep(5)
+                            time.sleep(3)
                             self.first_city_group(driver, client)
 
-                else:
-                    for city in range(8):
-                        element = driver.find_element(By.ID, "mat-select-0")
-                        driver.execute_script("arguments[0].click();", element)
-                        time.sleep(3)
-                        try:
-                            driver.find_element(By.ID, f"mat-option-{city}").click()
-                            time.sleep(5)
-
-                            driver.find_element(By.ID, "mat-select-2").click()
-                            time.sleep(5)
-
-                            national_visa_element = driver.find_element(By.XPATH, f"//span[text()=' {NATIONAL} ']")
-                            national_visa_element.click()
-                            time.sleep(3)
-
-                            driver.find_element(By.ID, "mat-select-4").click()
-                            time.sleep(3)
-
-                            driver.find_element(By.XPATH, f"//span[text()=' {OTHER} ']").click()
-                            time.sleep(3)
-
-                            date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
-                                                                      'input[formcontrolname="dateOfBirth"].form-control')
-                            date_of_birth_input.clear()
-                            date_of_birth_input.send_keys("23/10/1992")
-                            time.sleep(3)
-
-                            driver.find_element(By.ID, "mat-select-value-7").click()
-                            time.sleep(3)
-
-                            driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
-                            time.sleep(3)
-
-                            try:
-                                continue_button = driver.find_element(By.XPATH,
-                                                                      "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
-                                time.sleep(3)
-                                if "mat-button-disabled" in continue_button.get_attribute("class"):
-                                    print("The button is disabled. Continuing the loop.")
-                                else:
-                                    continue_button.click()
-                                    print("Button has been clicked")
-                                    self.your_detail(driver, client)
-                            except Exception:
-                                print('Error continue')
-
-                        except Exception as e:
-                            print(e)
+                # else:
+                #     for city in range(8):
+                #         element = driver.find_element(By.ID, "mat-select-0")
+                #         driver.execute_script("arguments[0].click();", element)
+                #         time.sleep(3)
+                #         try:
+                #             driver.find_element(By.ID, f"mat-option-{city}").click()
+                #             time.sleep(5)
+                #
+                #             driver.find_element(By.ID, "mat-select-2").click()
+                #             time.sleep(5)
+                #
+                #             national_visa_element = driver.find_element(By.XPATH, f"//span[text()=' {NATIONAL} ']")
+                #             national_visa_element.click()
+                #             time.sleep(3)
+                #
+                #             driver.find_element(By.ID, "mat-select-4").click()
+                #             time.sleep(3)
+                #
+                #             driver.find_element(By.XPATH, f"//span[text()=' {OTHER} ']").click()
+                #             time.sleep(3)
+                #
+                #             date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
+                #                                                       'input[formcontrolname="dateOfBirth"].form-control')
+                #             date_of_birth_input.clear()
+                #             date_of_birth_input.send_keys("23/10/1992")
+                #             time.sleep(3)
+                #
+                #             driver.find_element(By.ID, "mat-select-value-7").click()
+                #             time.sleep(3)
+                #
+                #             driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
+                #             time.sleep(3)
+                #
+                #             try:
+                #                 continue_button = driver.find_element(By.XPATH,
+                #                                                       "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
+                #                 time.sleep(3)
+                #                 if "mat-button-disabled" in continue_button.get_attribute("class"):
+                #                     print("The button is disabled. Continuing the loop.")
+                #                     time.sleep(30)
+                #                 else:
+                #                     continue_button.click()
+                #                     print("Button has been clicked")
+                #                     self.your_detail(driver, client)
+                #             except Exception:
+                #                 print('Error continue')
+                #
+                #         except Exception as e:
+                #             print(e)
 
         except Exception as e:
             print(f"User {user_id} error: {e}")
