@@ -23,6 +23,7 @@ VISA_SUB_D_CHOICES = [
         ('D - Uczen', 'D - Uczen'),
         ('D - Uczen Visa', 'D - Uczen Visa'),
         ('PBH D-visa', 'PBH D-visa'),
-        ('D-PBH', 'D-PBH'),
+        ('D - PBH', 'D - PBH'),
         ('D-PBH', 'D-PBH Visa'),
+        ('D - PBH Visa', 'D - PBH Visa'),
 ]

@@ -20,7 +20,7 @@ class Client(models.Model):
     is_active = models.BooleanField(default=True)
 
     cities = models.ManyToManyField(
-        'City', blank=True, null=True, related_name='clients'
+        'City', blank=True, related_name='clients'
     )
     visa_type = models.CharField(max_length=50, choices=VISA_CHOICES)
     visa_sub_category = models.CharField(max_length=50, choices=VISA_SUB_D_CHOICES)
