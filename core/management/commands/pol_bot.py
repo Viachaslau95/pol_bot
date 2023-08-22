@@ -314,70 +314,90 @@ class Command(BaseCommand):
             print(e)
 
     def second_city_group(self, driver, client):
-        pass
-    #     try:
-    #         driver.find_element(By.ID, "mat-select-2").click()
-    #         time.sleep(5)
-    #
-    #         if client.visa_type == "National Visa D":
-    #             driver.find_element(By.XPATH,
-    #                                 "//span[contains(@class, 'mat-option-text') and text()=' National Visa D ']").click()
-    #             time.sleep(3)
-    #             driver.find_element(By.ID, "mat-select-4").click()
-    #             time.sleep(3)
-    #             if client.visa_sub_category == "D - National":
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - National ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'D - National Visa':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - National Visa ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'D - Student':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Student ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'D - Student Visa':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Student Visa ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'D - Uczen':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Uczen ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'D - Uczen Visa':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Uczen Visa ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'PBH D-visa':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' PBH D-visa ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'D - PBH':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             elif client.visa_sub_category == 'D - PBH Visa':
-    #                 driver.find_element(
-    #                     By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH Visa ']"
-    #                 ).click()
-    #                 time.sleep(2)
-    #             self.date_of_birth_and_nationality(driver, client)
-    #         else:
-    #             driver.find_element(By.XPATH,
-    #                                 "//span[contains(@class, 'mat-option-text') and text()=' Schengen Visa C ']").click()
-    #             time.sleep(3)
-    #             self.date_of_birth_and_nationality(driver, client)
-    #     except Exception as e:
-    #         print(e)
+        try:
+            driver.find_element(By.ID, "mat-select-2").click()
+            time.sleep(5)
+
+            if client.visa_type == "National Visa D":
+                driver.find_element(By.XPATH,
+                                    "//span[contains(@class, 'mat-option-text') and text()=' National Visa D ']").click()
+                time.sleep(3)
+                driver.find_element(By.ID, "mat-select-4").click()
+                time.sleep(3)
+                if client.visa_sub_category == "D - Inne" or "D - National":
+                    try:
+                        driver.find_element(
+                            By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Inne ']"
+                        ).click()
+                        time.sleep(2)
+                    except Exception as ex:
+                        print(f"{ex}\n 'D-Inne' not found")
+                        driver.find_element(
+                            By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - National ']"
+                        ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - National Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - National Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - Studenci' or 'D - Student':
+                    try:
+                        driver.find_element(
+                            By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Studenci ']"
+                        ).click()
+                        time.sleep(2)
+                    except Exception as ex:
+                        print(f"{ex}\n 'D - Studenci' not found")
+                        driver.find_element(
+                            By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Student ']"
+                        ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - Student Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Student Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - Uczniowie' or 'D - Uczen':
+                    try:
+                        driver.find_element(
+                            By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Uczniowie ']"
+                        ).click()
+                        time.sleep(2)
+                    except Exception as ex:
+                        print(f"{ex}\n 'D - Uczniowie' not found")
+                        driver.find_element(
+                            By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Uczen ']"
+                        ).click()
+                        time.sleep(2)
+                elif client.visa_sub_category == 'D - Uczen Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Uczen Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'PBH D-visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' PBH D-visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - PBH':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'D - PBH Visa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH Visa ']"
+                    ).click()
+                    time.sleep(2)
+                self.date_of_birth_and_nationality(driver, client)
+            else:
+                driver.find_element(By.XPATH,
+                                    "//span[contains(@class, 'mat-option-text') and text()=' Schengen Visa C ']").click()
+                time.sleep(3)
+                self.date_of_birth_and_nationality(driver, client)
+        except Exception as e:
+            print(e)
 
     def date_of_birth_and_nationality(self, driver, client):
         date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
