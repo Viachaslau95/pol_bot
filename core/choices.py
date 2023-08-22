@@ -17,10 +17,13 @@ VISA_SUB_D_CHOICES = [
         ('Work D-visa', 'Work D-visa'),
 
         ('D - National', 'D - National'),
+        ('D - Inne', 'D - Inne'),
         ('D - National Visa', 'D - National Visa'),
         ('D - Student', 'D - Student'),
+        ('D - Studenci', 'D - Studenci'),
         ('D - Student Visa', 'D - Student Visa'),
         ('D - Uczen', 'D - Uczen'),
+        ('D - Uczniowie', 'D - Uczniowie'),
         ('D - Uczen Visa', 'D - Uczen Visa'),
         ('PBH D-visa', 'PBH D-visa'),
         ('D - PBH', 'D - PBH'),
