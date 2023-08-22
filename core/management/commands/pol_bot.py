@@ -59,7 +59,7 @@ class Command(BaseCommand):
 
     def login_and_city(self, driver, user_id, client):
         try:
-            if len(driver.window_handles) <= user_id:
+            while len(driver.window_handles) <= user_id:
                 driver.execute_script("window.open('', '_blank');")
             driver.switch_to.window(driver.window_handles[user_id])
 
