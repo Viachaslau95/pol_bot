@@ -4,6 +4,7 @@ from random import choice
 
 from django.core.management import BaseCommand
 from selenium import webdriver
+from selenium.common import TimeoutException
 from selenium.webdriver import Proxy
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -29,8 +30,8 @@ chrome_options.add_experimental_option("detach", True)
 #     return driver
 
 # proxies = [
-    # "194.158.203.14:80",
-    # ]
+# "194.158.203.14:80",
+# ]
 
 # for proxy in proxies:
 #     prox = Proxy()
@@ -41,6 +42,8 @@ chrome_options.add_experimental_option("detach", True)
 
 
 class Command(BaseCommand):
+    should_break = True
+
     def handle(self, *args, **options):
         num_users = Client.objects.filter(is_active=True).count()
         drivers = [webdriver.Chrome(options=chrome_options) for _ in range(num_users)]
@@ -77,7 +80,8 @@ class Command(BaseCommand):
                 EC.presence_of_element_located((By.CSS_SELECTOR, "h1.fs-24.fs-sm-46.mb-25"))
             )
             time.sleep(3)
-            while True:
+
+            while self.should_break:
                 cities = City.objects.filter(clients=client)
                 if cities.count == 1:
                     for city in cities:
@@ -425,9 +429,12 @@ class Command(BaseCommand):
             else:
                 continue_button.click()
                 print("Button has been clicked")
+                self.should_break = False
                 self.your_detail(driver, client)
         except Exception:
-            print('Error continue')
+            self.should_break = False
+            print(Exception)
+
 
     def your_detail(self, driver, client):
         WebDriverWait(driver, 120).until(
@@ -470,5 +477,59 @@ class Command(BaseCommand):
 
         driver.find_element(By.ID, "mat-input-9").send_keys(client.admin_email)
         time.sleep(3)
+        try:
+            wait = WebDriverWait(driver, 3600)
+            button_locator = (By.XPATH, "//button[contains(., 'Add another applicant')]")
+            wait.until(EC.presence_of_element_located(button_locator))
+            print("Кнопка 'Add another applicant' появилась")
+
+            self.some(driver)
+        except Exception as e:
+            print("Произошла ошибка:", e)
 
         # driver.find_element(By.XPATH, "//button[contains(@class, 'mat-stroked-button') and text()=' Save ']").click()
+
+    def some(self, driver):
+        print("in some")
+        while True:
+            try:
+                continue_button = driver.find_element(By.XPATH, "//button[contains(., 'Continue')]")
+                time.sleep(5)
+                continue_button.click()
+
+            except TimeoutException:
+                print("Кнопка 'Continue' не появилась за 60 минут")
+
+            WebDriverWait(driver, 600).until(
+                    EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Book an Appointment')]")))
+            try:
+                table = driver.find_element(By.CLASS_NAME, "fc-scrollgrid-sync-table")
+                td_elements = table.find_elements(By.TAG_NAME, "td")
+                count_page = 0
+            #     while count_page < 2:
+            #         for td_element in td_elements:
+            #             if "fc-day-disabled" not in td_element.get_attribute("class") and td_element.get_attribute("data-date"):
+            #                 td_element.click()
+            #                 try:
+            #                     continue_button = driver.find_element(
+            #                         By.XPATH,
+            #                         "//button[contains(@class, 'mat-raised-button') and contains(.//span, 'Continue')]"
+            #                     )
+            #                     if "mat-button-disabled" in continue_button.get_attribute("class"):
+            #                         pass
+            #                     else:
+            #                         continue_button.click()
+            #                 except Exception as e:
+            #                     print(e)
+            #
+            #         driver.find_element(By.CLASS_NAME, "fc-next-button").click()
+            #         count_page += 1
+            #
+            #     go_back_button = driver.find_element(By.XPATH,
+            #                                          "//button[contains(@class, 'mat-stroked-button') and contains(.//span, 'Go Back')]")
+            #     go_back_button.click()
+            #     # ..........
+            #     # driver.find_element(By.CLASS_NAME, "fc-prev-button").click()
+            #
+            except TimeoutException:
+                print("Элемент <h1> с текстом 'Book an Appointment' не появился за 10 минут")
