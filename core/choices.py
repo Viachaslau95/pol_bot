@@ -9,7 +9,7 @@ VISA_CHOICES = [
         ('Schengen Visa C', 'Schengen Visa C'),
     ]
 
-VISA_SUB_D_CHOICES = [
+VISA_SUB_CHOICES = [
         ('Driver D-visa', 'Driver D-visa'),
         ('Karta Polaka D-visa', 'Karta Polaka D-visa'),
         ('Other D-visa', 'Other D-visa'),
@@ -28,4 +28,15 @@ VISA_SUB_D_CHOICES = [
         ('PBH D-visa', 'PBH D-visa'),
         ('D - PBH', 'D - PBH'),
         ('D - PBH Visa', 'D - PBH Visa'),
+
+        ('Other C visa', 'Other C visa'),
+        ('USA Embassy, KP exam/odbior C-Visa', 'USA Embassy, KP exam/odbior C-Visa'),
+        ('Tourism C-visa', 'Tourism C-visa'),
+
+        ('C - Biznes', 'C - Biznes'),
+        ('C - Business Visa', 'C - Business Visa'),
+        ('C - Culture Visa', 'C - Culture Visa'),
+        ('C - Kultura', 'C - Kultura'),
+        ('C - Odwiedziny', 'C - Odwiedziny'),
+        ('C - Visit Visa', 'C - Visit Visa'),
 ]

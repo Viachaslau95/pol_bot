@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.choices import GENDER_CHOICES, VISA_SUB_D_CHOICES, VISA_CHOICES
+from core.choices import GENDER_CHOICES, VISA_CHOICES, VISA_SUB_CHOICES
 
 
 class Client(models.Model):
@@ -23,7 +23,7 @@ class Client(models.Model):
         'City', blank=True, related_name='clients'
     )
     visa_type = models.CharField(max_length=50, choices=VISA_CHOICES)
-    visa_sub_category = models.CharField(max_length=50, choices=VISA_SUB_D_CHOICES,
+    visa_sub_category = models.CharField(max_length=50, choices=VISA_SUB_CHOICES,
                                          help_text='Be very careful!\n'
                                                    'D - PBH Visa and PBH D-Visa are for different cities!!!'
                                          )

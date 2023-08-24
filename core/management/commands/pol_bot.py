@@ -435,7 +435,6 @@ class Command(BaseCommand):
             self.should_break = False
             print(Exception)
 
-
     def your_detail(self, driver, client):
         WebDriverWait(driver, 120).until(
             EC.presence_of_element_located((By.XPATH, "//h5[@class='mb-20 ng-star-inserted']"))
