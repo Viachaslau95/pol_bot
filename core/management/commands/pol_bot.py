@@ -83,7 +83,10 @@ class Command(BaseCommand):
 
             while self.should_break:
                 cities = City.objects.filter(clients=client)
-                if cities.count == 1:
+                if cities.count() == 1:
+                    element = driver.find_element(By.ID, "mat-select-0")
+                    driver.execute_script("arguments[0].click();", element)
+                    time.sleep(3)
                     for city in cities:
                         if city.title == "Center-Baranovichi":
                             driver.find_element(By.ID, "mat-option-1").click()
