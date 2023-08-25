@@ -5,15 +5,17 @@ from core.models import Client, City
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'firstname', 'is_active', 'list_cities', 'visa_sub_category')
+    list_display = ('lastname', 'is_active', 'list_cities', 'visa_type', 'visa_sub_category')
     list_filter = ('cities',)
+    list_editable = ('is_active',)
 
     def list_cities(self, obj):
         return ", ".join([related_obj.title for related_obj in obj.cities.all()])
 
-    list_cities.short_description = 'Cities'
+    def edit_is_active(self, obj):
+        return obj.is_active
 
 
 @admin.register(City)
-class ClientAdmin(admin.ModelAdmin):
+class CityAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
