@@ -42,4 +42,5 @@ VISA_SUB_CHOICES = [
         ('C - Kultura', 'C - Kultura'),
         ('C - Odwiedziny', 'C - Odwiedziny'),
         ('C - Visit Visa', 'C - Visit Visa'),
+        ('C - Schengen', 'C - Schengen'),
 ]

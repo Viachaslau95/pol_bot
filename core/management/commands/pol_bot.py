@@ -418,10 +418,8 @@ class Command(BaseCommand):
         driver.find_element(By.XPATH,
                             "//span[contains(@class, 'mat-option-text') and text()=' Schengen Visa C ']").click()
         time.sleep(3)
-        if city.title == "Center-Baranovichi" or city.title == "Center-Brest" or city.title == "Center-Pinsk":
-            self.date_of_birth_and_nationality(driver, client)
 
-        elif city.title == "Center-Gomel" or city.title == "Center-Minsk" or city.title == "Center-Mogilev":
+        if city.title == "Center-Minsk":
             driver.find_element(By.ID, "mat-select-4").click()
             time.sleep(3)
             if client.visa_sub_category == "C - Biznes":
@@ -451,6 +449,12 @@ class Command(BaseCommand):
             elif client.visa_sub_category == "C - Odwiedziny":
                 driver.find_element(By.XPATH,
                                     "//mat-option[contains(@class, 'mat-option') and contains(., ' C - Odwiedziny ')]"
+                                    ).click()
+                time.sleep(3)
+                self.date_of_birth_and_nationality(driver, client)
+            elif client.visa_sub_category == "C - Schengen":
+                driver.find_element(By.XPATH,
+                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' C - Schengen ')]"
                                     ).click()
                 time.sleep(3)
                 self.date_of_birth_and_nationality(driver, client)
@@ -492,6 +496,9 @@ class Command(BaseCommand):
                                     ).click()
                 time.sleep(3)
                 self.date_of_birth_and_nationality(driver, client)
+        else:
+            time.sleep(3)
+            self.date_of_birth_and_nationality(driver, client)
 
     def date_of_birth_and_nationality(self, driver, client):
         date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
@@ -579,47 +586,57 @@ class Command(BaseCommand):
 
         # driver.find_element(By.XPATH, "//button[contains(@class, 'mat-stroked-button') and text()=' Save ']").click()
 
-    def some(self, driver):
-        print("in some")
-        while True:
-            try:
-                continue_button = driver.find_element(By.XPATH, "//button[contains(., 'Continue')]")
-                time.sleep(5)
-                continue_button.click()
-
-            except TimeoutException:
-                print("Кнопка 'Continue' не появилась за 60 минут")
-
-            WebDriverWait(driver, 600).until(
-                EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Book an Appointment')]")))
-            try:
-                table = driver.find_element(By.CLASS_NAME, "fc-scrollgrid-sync-table")
-                td_elements = table.find_elements(By.TAG_NAME, "td")
-                count_page = 0
-            #     while count_page < 2:
-            #         for td_element in td_elements:
-            #             if "fc-day-disabled" not in td_element.get_attribute("class") and td_element.get_attribute("data-date"):
-            #                 td_element.click()
-            #                 try:
-            #                     continue_button = driver.find_element(
-            #                         By.XPATH,
-            #                         "//button[contains(@class, 'mat-raised-button') and contains(.//span, 'Continue')]"
-            #                     )
-            #                     if "mat-button-disabled" in continue_button.get_attribute("class"):
-            #                         pass
-            #                     else:
-            #                         continue_button.click()
-            #                 except Exception as e:
-            #                     print(e)
-            #
-            #         driver.find_element(By.CLASS_NAME, "fc-next-button").click()
-            #         count_page += 1
-            #
-            #     go_back_button = driver.find_element(By.XPATH,
-            #                                          "//button[contains(@class, 'mat-stroked-button') and contains(.//span, 'Go Back')]")
-            #     go_back_button.click()
-            #     # ..........
-            #     # driver.find_element(By.CLASS_NAME, "fc-prev-button").click()
-            #
-            except TimeoutException:
-                print("Элемент <h1> с текстом 'Book an Appointment' не появился за 10 минут")
+    # def some(self, driver):
+    #     print("in some")
+    #     while True:
+    #         try:
+    #             continue_button = driver.find_element(By.XPATH, "//button[contains(., 'Continue')]")
+    #             time.sleep(5)
+    #             continue_button.click()
+    #
+    #         except TimeoutException:
+    #             print("Кнопка 'Continue' не появилась за 60 минут")
+    #
+    #         WebDriverWait(driver, 600).until(
+    #             EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Book an Appointment')]")))
+    #         try:
+    #             table = driver.find_element(By.CLASS_NAME, "fc-scrollgrid-sync-table")
+    #             td_elements = table.find_elements(By.TAG_NAME, "td")
+    #             count_page = 0
+    #             desired_element_xpath = "//td[@class='fc-daygrid-day fc-day fc-day-fri fc-day-future date-availiable']"
+    #             while count_page < 2:
+    #                 for td_element in td_elements:
+    #                     if td_element.get_attribute("outerHTML") == driver.find_element(
+    #                             By.XPATH, desired_element_xpath).get_attribute("outerHTML"):
+    #                         time.sleep(2)
+    #                         td_element.click()
+    #                         time.sleep(3)
+    #
+    #                         try:
+    #                             WebDriverWait(driver, 60).until(
+    #                                 EC.presence_of_element_located(
+    #                                     (By.XPATH, "//h2[@class='fs-18 fs-sm-24 mt-40 mb-20 ng-star-inserted']")
+    #                                 )
+    #                             )
+    #                             time_element = driver.find_element(By.XPATH,
+    #                                                                "//tr[@class='hidden-item ng-star-inserted']")
+    #                             time_element.click()
+    #                             time.sleep(5)
+    #
+    #                             driver.find_element(By.XPATH,
+    #                                                 "//button[contains(@class, 'mat-raised-button') and contains(.//span, 'Continue')]").click()
+    #
+    #                         except Exception as e:
+    #                             print(e)
+    #
+    #                 driver.find_element(By.CLASS_NAME, "fc-next-button").click()
+    #                 count_page += 1
+    #
+    #             go_back_button = driver.find_element(By.XPATH,
+    #                                                  "//button[contains(@class, 'mat-stroked-button') and contains(.//span, 'Go Back')]")
+    #             go_back_button.click()
+    #             # ..........
+    #             # driver.find_element(By.CLASS_NAME, "fc-prev-button").click()
+    #         #
+    #         except TimeoutException:
+    #             print("Элемент <h1> с текстом 'Book an Appointment' не появился за 10 минут")
