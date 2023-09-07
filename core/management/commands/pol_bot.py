@@ -43,7 +43,9 @@ chrome_options.add_experimental_option("detach", True)
 
 
 class Command(BaseCommand):
-    should_break = True
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.thread_states = {}
 
     def handle(self, *args, **options):
         num_users = Client.objects.filter(is_active=True).count()
@@ -56,6 +58,7 @@ class Command(BaseCommand):
             thread = threading.Thread(target=self.login_and_city,
                                       args=(driver, user_id, client))
             threads.append(thread)
+            self.thread_states[thread] = "run"
             thread.start()
 
         for thread in threads:
@@ -76,13 +79,15 @@ class Command(BaseCommand):
             time.sleep(2)
             driver.find_element(By.ID, "mat-input-1").send_keys(client.reg_password)
             time.sleep(2)
+            print(f'{client.reg_email} - waiting for captcha solution')
+
             # wait 30 min
             WebDriverWait(driver, 1800).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "h1.fs-24.fs-sm-46.mb-25"))
             )
             time.sleep(3)
 
-            while self.should_break:
+            while self.thread_states[threading.current_thread()] != "stop":
                 cities = City.objects.filter(clients=client)
                 if cities.count() == 1:
                     element = driver.find_element(By.ID, "mat-select-0")
@@ -528,7 +533,7 @@ class Command(BaseCommand):
             else:
                 continue_button.click()
                 print("Button has been clicked")
-                self.should_break = False
+                self.thread_states[threading.current_thread()] = "stop"
                 current_date = datetime.now()
                 birth_date = datetime.strptime(client.date_of_birth, "%d/%m/%Y")
                 age = current_date.year - birth_date.year
@@ -543,7 +548,7 @@ class Command(BaseCommand):
                 else:
                     self.your_detail(driver, client)
         except Exception:
-            self.should_break = False
+            self.thread_states[threading.current_thread()] = "stop"
             print(Exception)
 
     def your_detail(self, driver, client):
@@ -592,10 +597,11 @@ class Command(BaseCommand):
             button_locator = (By.XPATH, "//button[contains(., 'Add another applicant')]")
             wait.until(EC.presence_of_element_located(button_locator))
             print("Кнопка 'Add another applicant' появилась")
+            print(f"{client.reg_email} - trying to enter in find slot! ")
 
             self.find_slot(driver)
         except Exception as e:
-            print("Произошла ошибка:", e)
+            print(f"Error user {client.reg_email}:", e)
 
         # driver.find_element(By.XPATH, "//button[contains(@class, 'mat-stroked-button') and text()=' Save ']").click()
 
@@ -653,10 +659,10 @@ class Command(BaseCommand):
             button_locator = (By.XPATH, "//button[contains(., 'Add another applicant')]")
             wait.until(EC.presence_of_element_located(button_locator))
             print("Кнопка 'Add another applicant' появилась")
-
+            print(f"{client.reg_email} - trying to enter in find slot! ")
             self.find_slot(driver)
         except Exception as e:
-            print("Произошла ошибка:", e)
+            print(f"Error user {client.reg_email}:", e)
 
     def find_slot(self, driver):
         print("in find_slot")
@@ -665,7 +671,7 @@ class Command(BaseCommand):
         #         continue_button = driver.find_element(By.XPATH, "//button[contains(., 'Continue')]")
         #         time.sleep(5)
         #         continue_button.click()
-        #
+        # #
         #     except TimeoutException:
         #         print("Кнопка 'Continue' не появилась за 60 минут")
         #
