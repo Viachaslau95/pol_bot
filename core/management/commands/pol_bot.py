@@ -1,11 +1,10 @@
 import threading
 import time
+import telebot
 from datetime import datetime
-from random import choice
 
 from django.core.management import BaseCommand
 from selenium import webdriver
-from selenium.common import TimeoutException
 from selenium.webdriver import Proxy
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -15,6 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from config.settings import LOGIN_URL
 from core.models import Client, City
+from config.settings.local import tg_bot_token, chat_id
 
 chrome_options = Options()
 chrome_options.add_argument("--incognito")
@@ -40,7 +40,7 @@ chrome_options.add_experimental_option("detach", True)
 #     prox.http_proxy = proxy
 #     prox.ssl_proxy = proxy
 #     chrome_options.add_argument('--proxy-server=http://' + proxy)
-
+bot = telebot.TeleBot(tg_bot_token)
 
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
@@ -80,7 +80,7 @@ class Command(BaseCommand):
             driver.find_element(By.ID, "mat-input-1").send_keys(client.reg_password)
             time.sleep(2)
             print(f'{client.reg_email} - waiting for captcha solution')
-
+            bot.send_message(chat_id=chat_id, text=f'{client.reg_email} - waiting for captcha solution')
             # wait 30 min
             WebDriverWait(driver, 1800).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "h1.fs-24.fs-sm-46.mb-25"))
@@ -277,7 +277,11 @@ class Command(BaseCommand):
                 #             print(e)
 
         except Exception as e:
-            print(f"User {user_id} error: {e}")
+            print(f"User {client.reg_email} error: {e}")
+            bot.send_message(
+                chat_id=chat_id,
+                text=f'Клиент {client.lastname} | +375-{client.contact_number} : завершил выполнение в боте, без записи!'
+            )
 
     def first_city_group(self, driver, client, city):
         try:
@@ -592,6 +596,10 @@ class Command(BaseCommand):
 
         driver.find_element(By.ID, "mat-input-9").send_keys(client.admin_email)
         time.sleep(3)
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Клиент {client.lastname} | +375-{client.contact_number} : Ожидает MSI'
+        )
         try:
             wait = WebDriverWait(driver, 3600)
             button_locator = (By.XPATH, "//button[contains(., 'Add another applicant')]")
