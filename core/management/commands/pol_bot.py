@@ -1,3 +1,4 @@
+import random
 import threading
 import time
 import telebot
@@ -5,10 +6,8 @@ from datetime import datetime
 
 from django.core.management import BaseCommand
 from selenium import webdriver
-from selenium.webdriver import Proxy
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.proxy import ProxyType
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -16,30 +15,25 @@ from config.settings import LOGIN_URL
 from core.models import Client, City
 from config.settings.local import tg_bot_token, chat_id
 
+
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+]
+
+
 chrome_options = Options()
 chrome_options.add_argument("--incognito")
 chrome_options.add_experimental_option("detach", True)
-
-
-# HOSTNAME = '37.17.38.196'
-# PORT = '53281'
+chrome_options.add_argument(f"user-agent={random.choice(user_agents)}")
 #
-#
-# def create_driver_with_proxy():
-#     chrome_options.add_argument(f'--proxy-server=http://{HOSTNAME}:{PORT}')
-#     driver = webdriver.Chrome(options=chrome_options)
-#     return driver
+# chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+# chrome_options.add_experimental_option('useAutomationExtension', False)
+# chrome_options.add_argument('--disable-blink-features=AutomationControlled')
 
-# proxies = [
-# "194.158.203.14:80",
-# ]
 
-# for proxy in proxies:
-#     prox = Proxy()
-#     prox.proxy_type = ProxyType.MANUAL
-#     prox.http_proxy = proxy
-#     prox.ssl_proxy = proxy
-#     chrome_options.add_argument('--proxy-server=http://' + proxy)
 bot = telebot.TeleBot(tg_bot_token)
 
 class Command(BaseCommand):
@@ -674,56 +668,72 @@ class Command(BaseCommand):
 
     def find_slot(self, driver):
         print("in find_slot")
-        # while True:
-        #     try:
-        #         continue_button = driver.find_element(By.XPATH, "//button[contains(., 'Continue')]")
-        #         time.sleep(5)
-        #         continue_button.click()
-        # #
-        #     except TimeoutException:
-        #         print("Кнопка 'Continue' не появилась за 60 минут")
+        WebDriverWait(driver, 3600).until(
+                EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Book an Appointment')]"))
+        )
+        time.sleep(3)
+        try:
+            element = driver.find_element(By.XPATH, f"//*[contains(text(), 'Available')]")
+            if element:
+                # добавим сообщение в бот...
+
+                # slot day
+                driver.find_element(
+                    By.CSS_SELECTOR, "td.fc-daygrid-day.fc-day.fc-day-tue.fc-day-future.date-availiable"
+                ).click()
+                time.sleep(2)
+
+                try:
+                    WebDriverWait(driver, 30).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "div.table-responsive-lg table.table tbody"))
+                    )
+
+                    # slot time
+                    driver.find_element(By.CSS_SELECTOR, "tr.hidden-item.ng-star-inserted").click()
+                    time.sleep(2)
+
+                    driver.find_element(By.XPATH, "//span[contains(text(), 'Continue')]").click()
+                    time.sleep(3)
+
+                    self.services_page(driver)
+
+                except Exception as e:
+                    print("Произошла ошибка:", str(e))
+            else:
+                # add bot message...
+                pass
+        except Exception as e:
+            print("Произошла ошибка:", str(e))
+
+    def services_page(self,driver):
+        # add bot message
+        WebDriverWait(driver, 600).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//h1[contains(@class, 'fs-24') and contains(text(), 'Services')]"))
+        )
+
+        driver.find_element(By.XPATH, "//span[contains(text(), 'Continue')]").click()
+        time.sleep(3)
+
+        self.review_page(driver)
+
+    def review_page(self, driver):
+        print('in review_page')
+        # WebDriverWait(driver, 600).until(
+        #     EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Review')]"))
+        # )
+        # try:
+        #     checkboxes = WebDriverWait(driver, 10).until(
+        #         EC.presence_of_all_elements_located((By.XPATH, "//input[@aria-checked='false']"))
+        #     )
         #
-        #     WebDriverWait(driver, 3600).until(
-        #         EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Book an Appointment')]")))
-        #     try:
-        #         table = driver.find_element(By.CLASS_NAME, "fc-scrollgrid-sync-table")
-        #         td_elements = table.find_elements(By.TAG_NAME, "td")
-        #         count_page = 0
-        #         desired_element_xpath = "//td[@class='fc-daygrid-day fc-day fc-day-fri fc-day-future date-availiable']"
-        #         while count_page < 2:
-        #             for td_element in td_elements:
-        #                 if td_element.get_attribute("outerHTML") == driver.find_element(
-        #                         By.XPATH, desired_element_xpath).get_attribute("outerHTML"):
-        #                     time.sleep(2)
-        #                     td_element.click()
-        #                     time.sleep(3)
+        #     for checkbox in checkboxes:
+        #         checkbox.click()
         #
-        #                     try:
-        #                         WebDriverWait(driver, 60).until(
-        #                             EC.presence_of_element_located(
-        #                                 (By.XPATH, "//h2[@class='fs-18 fs-sm-24 mt-40 mb-20 ng-star-inserted']")
-        #                             )
-        #                         )
-        #                         time_element = driver.find_element(By.XPATH,
-        #                                                            "//tr[@class='hidden-item ng-star-inserted']")
-        #                         time_element.click()
-        #                         time.sleep(5)
+        #     print("Оба элемента чекбокса были успешно найдены и кликнуты.")
         #
-        #                         driver.find_element(By.XPATH,
-        #                                             "//button[contains(@class, 'mat-raised-button') and contains(.//span, 'Continue')]").click()
-        #
-        #                     except Exception as e:
-        #                         print(e)
-        #
-        #
-        #             driver.find_element(By.CLASS_NAME, "fc-next-button").click()
-        #             count_page += 1
-        #
-        #         go_back_button = driver.find_element(By.XPATH,
-        #                                              "//button[contains(@class, 'mat-stroked-button') and contains(.//span, 'Go Back')]")
-        #         go_back_button.click()
-        #         # ..........
-        #         # driver.find_element(By.CLASS_NAME, "fc-prev-button").click()
-        #     #
-        #     except TimeoutException:
-        #         print("Элемент <h1> с текстом 'Book an Appointment' не появился за 60 минут")
+        # except Exception as e:
+        #     print("Произошла ошибка:", str(e))
+
+
+
