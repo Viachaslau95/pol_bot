@@ -601,7 +601,7 @@ class Command(BaseCommand):
             print("Кнопка 'Add another applicant' появилась")
             print(f"{client.reg_email} - trying to enter in find slot! ")
 
-            self.find_slot(driver)
+            self.find_slot(driver, client)
         except Exception as e:
             print(f"Error user {client.reg_email}:", e)
 
@@ -662,21 +662,27 @@ class Command(BaseCommand):
             wait.until(EC.presence_of_element_located(button_locator))
             print("Кнопка 'Add another applicant' появилась")
             print(f"{client.reg_email} - trying to enter in find slot! ")
-            self.find_slot(driver)
+            self.find_slot(driver, client)
         except Exception as e:
             print(f"Error user {client.reg_email}:", e)
 
-    def find_slot(self, driver):
+    def find_slot(self, driver, client):
         print("in find_slot")
         WebDriverWait(driver, 3600).until(
                 EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Book an Appointment')]"))
         )
-        time.sleep(3)
         try:
-            element = driver.find_element(By.XPATH, f"//*[contains(text(), 'Available')]")
-            if element:
-                # добавим сообщение в бот...
+            element = WebDriverWait(driver, 180).until(
+                EC.presence_of_element_located((By.XPATH, f"//*[contains(text(), 'Available')]")
+                                               )
+            )
 
+            if element:
+                bot.send_message(
+                    chat_id=chat_id,
+                    text=f'Бот нашел свободные слоты для: {client.lastname} | +375-{client.contact_number}'
+                )
+                time.sleep(15)
                 # slot day
                 driver.find_element(
                     By.CSS_SELECTOR, "td.fc-daygrid-day.fc-day.fc-day-tue.fc-day-future.date-availiable"
@@ -695,18 +701,25 @@ class Command(BaseCommand):
                     driver.find_element(By.XPATH, "//span[contains(text(), 'Continue')]").click()
                     time.sleep(3)
 
-                    self.services_page(driver)
+                    self.services_page(driver, client)
 
                 except Exception as e:
                     print("Произошла ошибка:", str(e))
             else:
-                # add bot message...
-                pass
+                bot.send_message(
+                    chat_id=chat_id,
+                    text=f'Для Клиентa {client.lastname} | +375-{client.contact_number} - нет свободных слотов(Пустышка).'
+                         f'Бот завершил работу для этого клиента'
+                )
+                driver.close()
         except Exception as e:
             print("Произошла ошибка:", str(e))
 
-    def services_page(self,driver):
-        # add bot message
+    def services_page(self,driver, client):
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Клиент {client.lastname} | +375-{client.contact_number} : находится на странице services!'
+        )
         WebDriverWait(driver, 600).until(
             EC.presence_of_element_located(
                 (By.XPATH, "//h1[contains(@class, 'fs-24') and contains(text(), 'Services')]"))
@@ -715,10 +728,16 @@ class Command(BaseCommand):
         driver.find_element(By.XPATH, "//span[contains(text(), 'Continue')]").click()
         time.sleep(3)
 
-        self.review_page(driver)
+        self.review_page(driver, client)
 
-    def review_page(self, driver):
+    def review_page(self, driver, client):
         print('in review_page')
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Клиент {client.lastname} | +375-{client.contact_number} :находится на последней странице! Завершите регистрацию!'
+
+        )
+        driver.close()
         # WebDriverWait(driver, 600).until(
         #     EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Review')]"))
         # )
