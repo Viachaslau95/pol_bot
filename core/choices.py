@@ -31,6 +31,12 @@ VISA_SUB_CHOICES = [
         ('PBH D-visa', 'PBH D-visa'),
         ('D - PBH', 'D - PBH'),
         ('D - PBH Visa', 'D - PBH Visa'),
+        ('Krajowa', 'Krajowa'),
+        ('PRACA', 'PRACA'),
+        ('Natsionalnaya Viza', 'Natsionalnaya Viza'),
+
+        ('Studencheskaya Viza', 'Studencheskaya Viza'),
+
 
         ('Other C visa', 'Other C visa'),
         ('USA Embassy, KP exam/odbior C-Visa', 'USA Embassy, KP exam/odbior C-Visa'),

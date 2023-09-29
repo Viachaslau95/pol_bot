@@ -5,6 +5,9 @@ import telebot
 from datetime import datetime
 
 from django.core.management import BaseCommand
+import undetected_chromedriver as uc
+from selenium_stealth import stealth
+# from undetected_chromedriver import ChromeOptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -13,7 +16,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from config.settings import LOGIN_URL
 from core.models import Client, City
-from config.settings.local import tg_bot_token, chat_id
+from config.settings.local import tg_bot_token, chat_id,\
+    CITY_1, CITY_2, CITY_3, CITY_4, CITY_5, CITY_6, CITY_7, CITY_8
 
 
 user_agents = [
@@ -88,7 +92,7 @@ class Command(BaseCommand):
                     driver.execute_script("arguments[0].click();", element)
                     time.sleep(3)
                     for city in cities:
-                        if city.title == "Center-Baranovichi":
+                        if city.title == CITY_1:
                             driver.find_element(By.ID, "mat-option-1").click()
                             time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -98,7 +102,7 @@ class Command(BaseCommand):
                             time.sleep(3)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Brest":
+                        if city.title == CITY_2:
                             driver.find_element(By.ID, "mat-option-5").click()
                             time.sleep(3)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -108,7 +112,7 @@ class Command(BaseCommand):
                             time.sleep(5)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Gomel":
+                        if city.title == CITY_3:
                             driver.find_element(By.ID, "mat-option-3").click()
                             time.sleep(3)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -118,7 +122,7 @@ class Command(BaseCommand):
                             time.sleep(5)
                             self.second_city_group(driver, client, city)
 
-                        if city.title == "Center-Grodno":
+                        if city.title == CITY_4:
                             driver.find_element(By.ID, "mat-option-2").click()
                             time.sleep(3)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -128,7 +132,7 @@ class Command(BaseCommand):
                             time.sleep(5)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Lida":
+                        if city.title == CITY_5:
                             driver.find_element(By.ID, "mat-option-5").click()
                             time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -138,7 +142,7 @@ class Command(BaseCommand):
                             time.sleep(3)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Minsk":
+                        if city.title == CITY_6:
                             driver.find_element(By.ID, "mat-option-2").click()
                             time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -151,7 +155,7 @@ class Command(BaseCommand):
                             else:
                                 self.second_city_group(driver, client, city)
 
-                        if city.title == "Center-Mogilev":
+                        if city.title == CITY_7:
                             driver.find_element(By.ID, "mat-option-3").click()
                             time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -161,7 +165,7 @@ class Command(BaseCommand):
                             time.sleep(3)
                             self.second_city_group(driver, client, city)
 
-                        if city.title == "Center-Pinsk":
+                        if city.title == CITY_8:
                             driver.find_element(By.ID, "mat-option-4").click()
                             time.sleep(5)
                             element = driver.find_element(By.ID, "mat-select-0")
@@ -176,32 +180,32 @@ class Command(BaseCommand):
                         element = driver.find_element(By.ID, "mat-select-0")
                         driver.execute_script("arguments[0].click();", element)
                         time.sleep(3)
-                        if city.title == "Center-Baranovichi":
+                        if city.title == CITY_1:
                             driver.find_element(By.ID, "mat-option-0").click()
                             time.sleep(3)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Brest":
+                        if city.title == CITY_2:
                             driver.find_element(By.ID, "mat-option-1").click()
                             time.sleep(5)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Gomel":
+                        if city.title == CITY_3:
                             driver.find_element(By.ID, "mat-option-2").click()
                             time.sleep(5)
                             self.second_city_group(driver, client, city)
 
-                        if city.title == "Center-Grodno":
+                        if city.title == CITY_4:
                             driver.find_element(By.ID, "mat-option-3").click()
                             time.sleep(5)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Lida":
+                        if city.title == CITY_5:
                             driver.find_element(By.ID, "mat-option-4").click()
                             time.sleep(3)
                             self.first_city_group(driver, client, city)
 
-                        if city.title == "Center-Minsk":
+                        if city.title == CITY_6:
                             driver.find_element(By.ID, "mat-option-5").click()
                             time.sleep(3)
                             if client.visa_sub_category == 'Postal D-visa':
@@ -209,66 +213,16 @@ class Command(BaseCommand):
                             else:
                                 self.second_city_group(driver, client, city)
 
-                        if city.title == "Center-Mogilev":
+                        if city.title == CITY_7:
                             driver.find_element(By.ID, "mat-option-6").click()
                             time.sleep(3)
                             self.second_city_group(driver, client, city)
 
-                        if city.title == "Center-Pinsk":
+                        if city.title == CITY_8:
                             driver.find_element(By.ID, "mat-option-7").click()
                             time.sleep(3)
                             self.first_city_group(driver, client, city)
 
-                # else:
-                #     for city in range(8):
-                #         element = driver.find_element(By.ID, "mat-select-0")
-                #         driver.execute_script("arguments[0].click();", element)
-                #         time.sleep(3)
-                #         try:
-                #             driver.find_element(By.ID, f"mat-option-{city}").click()
-                #             time.sleep(5)
-                #
-                #             driver.find_element(By.ID, "mat-select-2").click()
-                #             time.sleep(5)
-                #
-                #             national_visa_element = driver.find_element(By.XPATH, f"//span[text()=' {NATIONAL} ']")
-                #             national_visa_element.click()
-                #             time.sleep(3)
-                #
-                #             driver.find_element(By.ID, "mat-select-4").click()
-                #             time.sleep(3)
-                #
-                #             driver.find_element(By.XPATH, f"//span[text()=' {OTHER} ']").click()
-                #             time.sleep(3)
-                #
-                #             date_of_birth_input = driver.find_element(By.CSS_SELECTOR,
-                #                                                       'input[formcontrolname="dateOfBirth"].form-control')
-                #             date_of_birth_input.clear()
-                #             date_of_birth_input.send_keys("23/10/1992")
-                #             time.sleep(3)
-                #
-                #             driver.find_element(By.ID, "mat-select-value-7").click()
-                #             time.sleep(3)
-                #
-                #             driver.find_element(By.XPATH, "//span[text()=' BELARUS ']").click()
-                #             time.sleep(3)
-                #
-                #             try:
-                #                 continue_button = driver.find_element(By.XPATH,
-                #                                                       "//button[contains(@class, 'mat-focus-indicator') and contains(@class, 'mat-raised-button')]")
-                #                 time.sleep(3)
-                #                 if "mat-button-disabled" in continue_button.get_attribute("class"):
-                #                     print("The button is disabled. Continuing the loop.")
-                #                     time.sleep(30)
-                #                 else:
-                #                     continue_button.click()
-                #                     print("Button has been clicked")
-                #                     self.your_detail(driver, client)
-                #             except Exception:
-                #                 print('Error continue')
-                #
-                #         except Exception as e:
-                #             print(e)
 
         except Exception as e:
             print(f"User {client.reg_email} error: {e}")
@@ -313,6 +267,26 @@ class Command(BaseCommand):
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Work D-visa ']"
                     ).click()
                     time.sleep(2)
+                elif client.visa_sub_category == 'Natsionalnaya Viza':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Natsionalnaya Viza ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'Studencheskaya Viza':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Studencheskaya Viza ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'PRACA':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' PRACA ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'Krajowa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Krajowa ']"
+                    ).click()
+
 
                 self.date_of_birth_and_nationality(driver, client)
             else:
@@ -348,6 +322,11 @@ class Command(BaseCommand):
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Nacional ']"
                     ).click()
                     time.sleep(2)
+                elif client.visa_sub_category == 'Natsionalnaya Viza':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Natsionalnaya Viza ']"
+                    ).click()
+                    time.sleep(2)
                 elif client.visa_sub_category == 'D - National Visa':
                     driver.find_element(
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - National Visa ']"
@@ -373,6 +352,11 @@ class Command(BaseCommand):
                 elif client.visa_sub_category == 'D - Student Visa':
                     driver.find_element(
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - Student Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'Studencheskaya Viza':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Studencheskaya Viza ']"
                     ).click()
                     time.sleep(2)
                 elif client.visa_sub_category == 'D - Uchenik':
@@ -410,6 +394,16 @@ class Command(BaseCommand):
                 elif client.visa_sub_category == 'D - PBH Visa':
                     driver.find_element(
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' D - PBH Visa ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'PRACA':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' PRACA ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'Krajowa':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Krajowa ']"
                     ).click()
                     time.sleep(2)
                 self.date_of_birth_and_nationality(driver, client)
@@ -645,6 +639,15 @@ class Command(BaseCommand):
         driver.find_element(By.ID, "mat-input-7").send_keys(client.admin_email)
         time.sleep(30)
 
+        driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]").click()
+        time.sleep(3)
+
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Клиент {client.lastname} | +375-{client.contact_number} : Ожидает OTP'
+        )
+
+
         # try:
         #     button_save = driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]")
         #     button_save.click()
@@ -673,8 +676,9 @@ class Command(BaseCommand):
         )
         try:
             element = WebDriverWait(driver, 180).until(
-                EC.presence_of_element_located((By.XPATH, f"//*[contains(text(), 'Available')]")
-                                               )
+                EC.presence_of_element_located(
+                    (By.XPATH, f"//*[contains(text(), 'Available')]")
+                )
             )
 
             if element:
@@ -682,10 +686,11 @@ class Command(BaseCommand):
                     chat_id=chat_id,
                     text=f'Бот нашел свободные слоты для: {client.lastname} | +375-{client.contact_number}'
                 )
-                time.sleep(15)
+                time.sleep(7)
+
                 # slot day
                 driver.find_element(
-                    By.CSS_SELECTOR, "td.fc-daygrid-day.fc-day.fc-day-tue.fc-day-future.date-availiable"
+                    By.CSS_SELECTOR, "td.fc-day-future.date-availiable"
                 ).click()
                 time.sleep(2)
 
@@ -704,7 +709,51 @@ class Command(BaseCommand):
                     self.services_page(driver, client)
 
                 except Exception as e:
-                    print("Произошла ошибка:", str(e))
+                    print(f'{client.reg_email} ERROR in slot time! - {e}')
+
+            elif not element:
+                driver.find_element(By.CLASS_NAME, "fc-next-button").click()
+                element_2_page = WebDriverWait(driver, 180).until(
+                    EC.presence_of_element_located((By.XPATH, f"//*[contains(text(), 'Available')]")
+                                                   )
+                )
+                if element_2_page:
+                    bot.send_message(
+                        chat_id=chat_id,
+                        text=f'Бот нашел свободные слоты для: {client.lastname} | +375-{client.contact_number}'
+                    )
+                    time.sleep(15)
+
+                    # slot day
+                    driver.find_element(
+                        By.CSS_SELECTOR, "td.fc-day-future.date-availiable"
+                    ).click()
+                    time.sleep(2)
+
+                    try:
+                        WebDriverWait(driver, 30).until(
+                            EC.presence_of_element_located(
+                                (By.CSS_SELECTOR, "div.table-responsive-lg table.table tbody")
+                            )
+                        )
+
+                        # slot time
+                        driver.find_element(By.CSS_SELECTOR, "tr.hidden-item.ng-star-inserted").click()
+                        time.sleep(2)
+
+                        driver.find_element(By.XPATH, "//span[contains(text(), 'Continue')]").click()
+                        time.sleep(3)
+
+                        self.services_page(driver, client)
+                    except Exception as e:
+                        print("Произошла ошибка:", str(e))
+                else:
+                    bot.send_message(
+                        chat_id=chat_id,
+                        text=f'Для Клиентa {client.lastname} | +375-{client.contact_number} - нет свободных слотов(Пустышка).'
+                             f'Бот завершил работу для этого клиента'
+                    )
+                    driver.close()
             else:
                 bot.send_message(
                     chat_id=chat_id,
@@ -713,7 +762,10 @@ class Command(BaseCommand):
                 )
                 driver.close()
         except Exception as e:
-            print("Произошла ошибка:", str(e))
+            print(f'{client.reg_email} ERROR in find slot! - {e}')
+            bot.send_message(
+                chat_id=chat_id,
+                text=f'БОТ НЕ СМОГ ВЫБРАТЬ ДАТУ!!! ЗАВЕРШИТЕ ЗАПОЛНЕНИЕ ВРУЧНУЮ. Чтобы не потерять слот.')
 
     def services_page(self,driver, client):
         bot.send_message(
@@ -724,7 +776,7 @@ class Command(BaseCommand):
             EC.presence_of_element_located(
                 (By.XPATH, "//h1[contains(@class, 'fs-24') and contains(text(), 'Services')]"))
         )
-
+        time.sleep(5)
         driver.find_element(By.XPATH, "//span[contains(text(), 'Continue')]").click()
         time.sleep(3)
 
