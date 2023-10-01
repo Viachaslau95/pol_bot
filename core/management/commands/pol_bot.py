@@ -783,28 +783,31 @@ class Command(BaseCommand):
         self.review_page(driver, client)
 
     def review_page(self, driver, client):
-        print('in review_page')
         bot.send_message(
             chat_id=chat_id,
             text=f'Клиент {client.lastname} | +375-{client.contact_number} :находится на последней странице! Завершите регистрацию!'
 
         )
-        driver.close()
-        # WebDriverWait(driver, 600).until(
-        #     EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Review')]"))
-        # )
-        # try:
-        #     checkboxes = WebDriverWait(driver, 10).until(
-        #         EC.presence_of_all_elements_located((By.XPATH, "//input[@aria-checked='false']"))
-        #     )
-        #
-        #     for checkbox in checkboxes:
-        #         checkbox.click()
-        #
-        #     print("Оба элемента чекбокса были успешно найдены и кликнуты.")
-        #
-        # except Exception as e:
-        #     print("Произошла ошибка:", str(e))
+
+        WebDriverWait(driver, 600).until(
+            EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Review')]"))
+        )
+        time.sleep(2)
+        try:
+            driver.find_element(
+                By.XPATH,
+                "//div[@class='form-group mb-20 ng-star-inserted']//mat-checkbox[@id='mat-checkbox-1']"
+            ).click()
+            time.sleep(3)
+            confirm_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Confirm')]")
+            # confirm_button.click()
+
+        except Exception:
+            bot.send_message(
+                chat_id=chat_id,
+                text=f'БОТ НЕ СМОГ поставить галочку на последней странице!!!'
+                     f' ЗАВЕРШИТЕ ЗАПОЛНЕНИЕ ВРУЧНУЮ. Чтобы не потерять слот.')
+
 
 
 
