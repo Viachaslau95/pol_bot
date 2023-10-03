@@ -286,13 +286,11 @@ class Command(BaseCommand):
                     driver.find_element(
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Krajowa ']"
                     ).click()
-
-
                 self.date_of_birth_and_nationality(driver, client)
             else:
                 self.schengen_visa_c(driver, client, city)
         except Exception as e:
-            print(e)
+            print("in first city group", e)
 
     def second_city_group(self, driver, client, city):
         try:
@@ -410,7 +408,7 @@ class Command(BaseCommand):
             else:
                 self.schengen_visa_c(driver, client, city)
         except Exception as e:
-            print(e)
+            print('in second city group', e)
 
     def schengen_visa_c(self, driver, client, city):
         driver.find_element(By.XPATH,
@@ -521,7 +519,8 @@ class Command(BaseCommand):
             time.sleep(3)
             if "mat-button-disabled" in continue_button.get_attribute("class"):
                 print("The button is disabled. Continuing the loop.")
-                time.sleep(30)
+                random_time_sleep = random.choice([300, 360, 420])
+                time.sleep(random_time_sleep)
             else:
                 continue_button.click()
                 print("Button has been clicked")
@@ -540,8 +539,13 @@ class Command(BaseCommand):
                 else:
                     self.your_detail(driver, client)
         except Exception:
+            bot.send_message(
+                chat_id=chat_id,
+                text=f'Клиент {client.lastname} | +375-{client.contact_number} : Не завершил регистрацию '
+                     f'Завершите в ручную чтобы не потерять СЛОТ!'
+            )
             self.thread_states[threading.current_thread()] = "stop"
-            print(Exception)
+            print("in date_of_birth_and_nationality", Exception)
 
     def your_detail(self, driver, client):
         WebDriverWait(driver, 120).until(
@@ -637,14 +641,14 @@ class Command(BaseCommand):
         time.sleep(3)
 
         driver.find_element(By.ID, "mat-input-7").send_keys(client.admin_email)
-        time.sleep(30)
+        time.sleep(10)
 
         driver.find_element(By.XPATH, "//span[contains(text(), 'Save')]").click()
         time.sleep(3)
 
         bot.send_message(
             chat_id=chat_id,
-            text=f'Клиент {client.lastname} | +375-{client.contact_number} : Ожидает OTP'
+            text=f'Клиент {client.lastname} | +375-{client.contact_number} : Ожидает OTP или нажатия на кнопку!'
         )
 
 
