@@ -857,7 +857,7 @@ class Command(BaseCommand):
             ).click()
             time.sleep(3)
             confirm_button = driver.find_element(By.XPATH, "//span[contains(text(), 'Confirm')]")
-            # confirm_button.click()
+            confirm_button.click()
 
         except Exception:
             bot.send_message(
