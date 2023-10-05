@@ -5,7 +5,6 @@ import telebot
 from datetime import datetime
 
 from django.core.management import BaseCommand
-import undetected_chromedriver as uc
 # from undetected_chromedriver import ChromeOptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
