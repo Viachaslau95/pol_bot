@@ -49,4 +49,7 @@ VISA_SUB_CHOICES = [
         ('C - Odwiedziny', 'C - Odwiedziny'),
         ('C - Visit Visa', 'C - Visit Visa'),
         ('C - Schengen', 'C - Schengen'),
+        ('Szengen', 'Szengen'),
+        ('Schengenskaya - Wojewodskoe priglashenie', 'Schengenskaya - Wojewodskoe priglashenie'),
+        ('Schengenskaya Viza', 'Schengenskaya Viza'),
 ]

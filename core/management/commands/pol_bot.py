@@ -28,9 +28,11 @@ user_agents = [
 
 
 chrome_options = Options()
+# chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--incognito")
 chrome_options.add_experimental_option("detach", True)
-chrome_options.add_argument(f"user-agent={random.choice(user_agents)}")
+# chrome_options.add_argument(f"user-agent={random.choice(user_agents)}")
+
 #
 # chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
 # chrome_options.add_experimental_option('useAutomationExtension', False)
@@ -47,6 +49,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         num_users = Client.objects.filter(is_active=True).count()
         drivers = [webdriver.Chrome(options=chrome_options) for _ in range(num_users)]
+        # drivers = [uc.Chrome(options=chrome_options) for _ in range(num_users)]
         users_from_db = Client.objects.filter(is_active=True)
         threads = []
 
@@ -86,6 +89,30 @@ class Command(BaseCommand):
 
             while self.thread_states[threading.current_thread()] != "stop":
                 cities = City.objects.filter(clients=client)
+                # try:
+                #     warning_form = driver.find_element(By.CLASS_NAME, "mat-modal-delete-document")
+                #
+                #     if warning_form:
+                #         print('xxxx')
+                #         warning_form.find_element(By.XPATH, "//div[@class='col-12 col-sm']/button[@mat-stroked-button='']").click()
+                #         time.sleep(20)
+                #         try:
+                #             driver.find_element(By.ID, "mat-input-0").send_keys(client.reg_email)
+                #             time.sleep(2)
+                #             driver.find_element(By.ID, "mat-input-1").send_keys(client.reg_password)
+                #             time.sleep(2)
+                #             print(f'{client.reg_email} - waiting for captcha solution')
+                #             bot.send_message(chat_id=chat_id, text=f'{client.reg_email} - waiting for captcha solution')
+                #             # wait 30 min
+                #             WebDriverWait(driver, 1800).until(
+                #                 EC.presence_of_element_located((By.CSS_SELECTOR, "h1.fs-24.fs-sm-46.mb-25"))
+                #             )
+                #             time.sleep(3)
+                #         except Exception:
+                #             print('first warning page')
+                # except Exception:
+                #     print('not warning_form')
+
                 if cities.count() == 1:
                     element = driver.find_element(By.ID, "mat-select-0")
                     driver.execute_script("arguments[0].click();", element)
@@ -459,35 +486,62 @@ class Command(BaseCommand):
                                     ).click()
                 time.sleep(3)
                 self.date_of_birth_and_nationality(driver, client)
+            elif client.visa_sub_category == "Schengenskaya - Wojewodskoe priglashenie":
+                driver.find_element(By.XPATH,
+                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' Schengenskaya - Wojewodskoe priglashenie ')]"
+                                    ).click()
+                time.sleep(3)
+                self.date_of_birth_and_nationality(driver, client)
+            elif client.visa_sub_category == "Schengenskaya Viza":
+                driver.find_element(By.XPATH,
+                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' Schengenskaya Viza ')]"
+                                    ).click()
+                time.sleep(3)
+                self.date_of_birth_and_nationality(driver, client)
 
-        elif city.title == "Center-Grodno":
+        # elif city.title == "Center-Grodno":
+        #     driver.find_element(By.ID, "mat-select-4").click()
+        #     time.sleep(3)
+        #     if client.visa_sub_category == "Other C visa":
+        #         driver.find_element(By.XPATH,
+        #                             "//mat-option[contains(@class, 'mat-option') and contains(., ' Other C visa ')]"
+        #                             ).click()
+        #         time.sleep(3)
+        #         self.date_of_birth_and_nationality(driver, client)
+        #     elif client.visa_sub_category == "USA Embassy, KP exam/odbior C-Visa":
+        #         driver.find_element(
+        #             By.XPATH,
+        #             "//mat-option[contains(@class, 'mat-option') and contains(., ' USA Embassy, KP exam/odbior C-Visa ')]"
+        #         ).click()
+        #         time.sleep(3)
+        #         self.date_of_birth_and_nationality(driver, client)
+        # elif city.title == "Center-Lida":
+        #     driver.find_element(By.ID, "mat-select-4").click()
+        #     time.sleep(3)
+        #     if client.visa_sub_category == "Other C visa":
+        #         driver.find_element(By.XPATH,
+        #                             "//mat-option[contains(@class, 'mat-option') and contains(., ' Other C visa ')]"
+        #                             ).click()
+        #         time.sleep(3)
+        #         self.date_of_birth_and_nationality(driver, client)
+        #     elif client.visa_sub_category == "Tourism C-visa":
+        #         driver.find_element(By.XPATH,
+        #                             "//mat-option[contains(@class, 'mat-option') and contains(., ' Tourism C-visa ')]"
+        #                             ).click()
+        #         time.sleep(3)
+        #         self.date_of_birth_and_nationality(driver, client)
+        elif city.title == "Center-Gomel" or city.title == "Center-Mogilev":
             driver.find_element(By.ID, "mat-select-4").click()
             time.sleep(3)
-            if client.visa_sub_category == "Other C visa":
+            if client.visa_sub_category == "Schengenskaya - Wojewodskoe priglashenie":
                 driver.find_element(By.XPATH,
-                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' Other C visa ')]"
+                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' Schengenskaya - Wojewodskoe priglashenie ')]"
                                     ).click()
                 time.sleep(3)
                 self.date_of_birth_and_nationality(driver, client)
-            elif client.visa_sub_category == "USA Embassy, KP exam/odbior C-Visa":
-                driver.find_element(
-                    By.XPATH,
-                    "//mat-option[contains(@class, 'mat-option') and contains(., ' USA Embassy, KP exam/odbior C-Visa ')]"
-                ).click()
-                time.sleep(3)
-                self.date_of_birth_and_nationality(driver, client)
-        elif city.title == "Center-Lida":
-            driver.find_element(By.ID, "mat-select-4").click()
-            time.sleep(3)
-            if client.visa_sub_category == "Other C visa":
+            elif client.visa_sub_category == "Schengenskaya Viza":
                 driver.find_element(By.XPATH,
-                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' Other C visa ')]"
-                                    ).click()
-                time.sleep(3)
-                self.date_of_birth_and_nationality(driver, client)
-            elif client.visa_sub_category == "Tourism C-visa":
-                driver.find_element(By.XPATH,
-                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' Tourism C-visa ')]"
+                                    "//mat-option[contains(@class, 'mat-option') and contains(., ' Schengenskaya Viza ')]"
                                     ).click()
                 time.sleep(3)
                 self.date_of_birth_and_nationality(driver, client)
