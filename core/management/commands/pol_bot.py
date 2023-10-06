@@ -302,6 +302,16 @@ class Command(BaseCommand):
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Studencheskaya Viza ']"
                     ).click()
                     time.sleep(2)
+                elif client.visa_sub_category == 'Nacyjanalnaya':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Nacyjanalnaya ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'Studenckaya':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Studenckaya ']"
+                    ).click()
+                    time.sleep(2)
                 elif client.visa_sub_category == 'PRACA':
                     driver.find_element(
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' PRACA ']"
@@ -348,6 +358,16 @@ class Command(BaseCommand):
                 elif client.visa_sub_category == 'Natsionalnaya Viza':
                     driver.find_element(
                         By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Natsionalnaya Viza ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'Nacyjanalnaya':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Nacyjanalnaya ']"
+                    ).click()
+                    time.sleep(2)
+                elif client.visa_sub_category == 'Studenckaya':
+                    driver.find_element(
+                        By.XPATH, "//span[contains(@class, 'mat-option-text') and text()=' Studenckaya ']"
                     ).click()
                     time.sleep(2)
                 elif client.visa_sub_category == 'D - National Visa':

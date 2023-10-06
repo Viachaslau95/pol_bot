@@ -34,7 +34,8 @@ VISA_SUB_CHOICES = [
         ('Krajowa', 'Krajowa'),
         ('PRACA', 'PRACA'),
         ('Natsionalnaya Viza', 'Natsionalnaya Viza'),
-
+        ('Nacyjanalnaya', 'Nacyjanalnaya'),
+        ('Studenckaya', 'Studenckaya'),
         ('Studencheskaya Viza', 'Studencheskaya Viza'),
 
 
